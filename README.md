@@ -23,7 +23,7 @@ In this project, you will prove your mastery of the following learning objective
 * [Turn Errors into Sirens](instructions/4-turn-errors-into-sirens.md)
 
 ### Project Submission
-test
+
 For your submission, please submit the following:
 
 - A text file named `urls.txt` including:
