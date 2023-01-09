@@ -265,7 +265,7 @@ jobs:
               --query 'Reservations[*].instances[*].PublicIpAddress' \
               --output text)
             echo "API_URL=http://${BACKEND_PUBLIC_IP}:3030" >> frontend/.env
-            cat frontend/.end
+            cat frontend/.env
       - run:
           name: Deploy frontend objects
           command: |
@@ -302,7 +302,7 @@ jobs:
             npm run build
             tar -czf artifact.tar.gz dist/* package*
             cd ..
-            cd backend/artifact.tar.gz .circleci/ansible/roles/deploy/files
+            cp backend/artifact.tar.gz .circleci/ansible/roles/deploy/files
       - run:
           name: Deploy backend
           command: |
