@@ -9,6 +9,7 @@ import * as cors from 'cors';
 import { TransformInterceptor } from './modules/common/interceptors/TransformInterceptor';
 import * as express from 'express';
 import { ErrorFilter } from './modules/errors/error.filter';
+console.log('production branch')
 
 async function bootstrap() {
   const logger = new AppLogger();
@@ -28,7 +29,7 @@ async function bootstrap() {
     .setVersion('1.0')
     .addTag('customTag')
     .setBasePath(apiVersionPrefix)
-    .addBearerAuth()
+    .addBearerAuth() // FIxed error
     .build();
   const document = SwaggerModule.createDocument(app, options);
   SwaggerModule.setup(`api/${apiVersionPrefix}`, app, document);
