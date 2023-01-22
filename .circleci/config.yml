@@ -59,7 +59,7 @@ commands:
              name: Revert migrations
              when: on_fail
              command: |
-               SUCCESS=$(curl --insecure https://kvdb.io/RsjA1PWpoaUYkNL1srUuT7/migration_<< parameters.Workflow_ID >>)
+               SUCCESS=$(curl --insecure https://kvdb.io/JR4GSYyXps6LcTb9KvWcvv/migration_<< parameters.Workflow_ID >>)
                if(($SUCCESS=1));
                then 
                 cd ~/project/backend
@@ -243,7 +243,7 @@ jobs:
             if grep -q "has been executed successfully." ~/project/backend/migrations_dump.txt
             then
               
-              curl -d '1' https://kvdb.io/RsjA1PWpoaUYkNL1srUuT7/migration_${CIRCLE_WORKFLOW_ID:0:7}  
+              curl -d '1' https://kvdb.io/JR4GSYyXps6LcTb9KvWcvv/migration_${CIRCLE_WORKFLOW_ID:0:7}  
             fi
       - revert-migrations
       - destroy-environment
@@ -370,9 +370,9 @@ jobs:
             echo ${URL} 
             if curl -s ${URL} | grep "Welcome"
             then
-              exit 0
-            else
               exit 1
+            else
+              exit 2
             fi 
       - destroy-environment 
       - revert-migrations
@@ -388,8 +388,8 @@ jobs:
             yum install -y curl
             export OLD_WORKFLOW_ID=$(aws cloudformation list-exports --query "Exports[?Name==\`WorkflowID\`].Value" --no-paginate --output text)
             echo "Old Wokflow ID: $OLD_WORKFLOW_ID"
-            curl https://kvdb.io/RsjA1PWpoaUYkNL1srUuT7/old_workflow_id-2 -d "$OLD_WORKFLOW_ID"
-            export test=$(curl --insecure https://kvdb.io/RsjA1PWpoaUYkNL1srUuT7/old_workflow_id-2)
+            curl https://kvdb.io/JR4GSYyXps6LcTb9KvWcvv/old_workflow_id-2 -d "$OLD_WORKFLOW_ID"
+            export test=$(curl --insecure https://kvdb.io/JR4GSYyXps6LcTb9KvWcvv/old_workflow_id-2)
             echo test: $test
             
       - run:
@@ -417,7 +417,7 @@ jobs:
             --stack-status-filter CREATE_COMPLETE --no-paginate --output text)) 
             echo Stack names: "${STACKS[@]}"          
 
-            export OLDWORKFLOWID=$(curl --insecure https://kvdb.io/RsjA1PWpoaUYkNL1srUuT7/old_workflow_id-2)
+            export OLDWORKFLOWID=$(curl --insecure https://kvdb.io/JR4GSYyXps6LcTb9KvWcvv/old_workflow_id-2)
             echo Old Workflow ID: $OLDWORKFLOWID 
             echo CIRCLE_WORKFLOW_ID "${CIRCLE_WORKFLOW_ID:0:7}"
             # Fetch the stack names 
@@ -462,8 +462,8 @@ workflows:
           requires: [run-migrations]
       - smoke-test:
           requires: [deploy-backend, deploy-frontend]
-      - cloudfront-update:
-          requires: [smoke-test]
-      - cleanup:
-          requires: [cloudfront-update]
+      # - cloudfront-update:
+      #     requires: [smoke-test]
+      # - cleanup:
+      #     requires: [cloudfront-update]
           
